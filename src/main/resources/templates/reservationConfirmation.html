@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Book Reservation - Confirmation</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        table, td, th {
+            border: 1px solid #333;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<section>
+    <th:block th:if="${hasError == null}">
+        <header>
+            <h1>Book Reservation - Confirmation</h1>
+        </header>
+        <table>
+            <tr>
+                <th colspan="2">Your Reservation Status</th>
+            </tr>
+            <tr>
+                <td><b>Reader Name</b></td>
+                <td th:text="${readerName}"><!-- Display reader name from servlet --></td>
+            </tr>
+            <tr>
+                <td><b>Client IP Address</b></td>
+                <td th:text="${ip}"><!-- Display IP address from servlet --></td>
+            </tr>
+            <tr>
+                <td><b>Reservation for Book</b></td>
+                <td th:text="${bookTitle}"><!-- Display book title from servlet --></td>
+            </tr>
+            <tr>
+                <td><b>Number of copies</b></td>
+                <td th:text="${numberOfCopies}"><!-- Display number of copies from servlet --></td>
+            </tr>
+        </table>
+    </th:block>
+    <h1 class="error" th:if="${hasError != null}" th:text="${error}">
+
+    </h1>
+    <p>
+        <a th:href="@{/}">Go back to the list of books</a>
+    </p>
+</section>
+</body>
+</html>

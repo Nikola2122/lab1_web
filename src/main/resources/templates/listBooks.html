@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Book Reservation - Welcome and choose a Book</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .book-option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .book-option:hover {
+            background-color: #f5f5f5;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to our Book Reservation App</h1>
+</header>
+<main>
+    <form th:action="@{/bookReservation}" method="POST">
+        <h2>Choose a book:</h2>
+        <ul>
+            <li th:each="elem : ${books}">
+                <input class="book-option" th:value="${elem.getTitle()}" name="bookTitle"
+                       th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating()}"
+                       type="radio">
+            </li>
+        </ul>
+        <h2>Enter your information:</h2>
+        <label for="readerName">Your Name:</label>
+        <input id="readerName" type="text" name="readerName"><br/>
+        <label for="readerAddress">Your Address:</label>
+        <input id="readerAddress" type="text" name="readerAddress"><br/>
+
+        <h2>Choose number of copies:</h2>
+        <label for="numCopies">
+            <input id="numCopies" type="number" name="numCopies" min="1" max="10"><br/>
+        </label>
+        <br/>
+        <input type="submit" value="Reserve Book">
+    </form>
+
+    <div>
+        <form th:method="POST" th:action="@{/}">
+            <h2>Enter search information:</h2>
+            <label for="title">Book Title:</label>
+            <input id="title" type="text" name="titleS"><br/>
+            <label for="rating">Rating:</label>
+            <input id="rating" type="text" name="ratingS"><br/><br/>
+
+            <input type="submit" value="Search for books">
+        </form>
+        <h3 class="error" th:if="${hasError != null}" th:text="${error}">
+
+        </h3>
+        <ul th:if="${searchBooks != null}">
+            <li th:each="book : ${searchBooks}">
+                <p>
+                    <span th:text="${book.getTitle()}"></span> -
+                    <span th:text="${book.getGenre()}"></span> -
+                    <span th:text="${book.getAverageRating()}"></span>
+                </p>
+            </li>
+        </ul>
+    </div>
+
+</main>
+</body>
+</html>
