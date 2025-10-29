@@ -11,5 +11,4 @@ public class Lab1WpApplication {
     public static void main(String[] args) {
         SpringApplication.run(Lab1WpApplication.class, args);
     }
-
 }

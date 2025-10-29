@@ -1,10 +1,11 @@
-package mk.ukim.finki.wp.lab.web;
+package mk.ukim.finki.wp.lab.web.servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import mk.ukim.finki.wp.lab.model.BookReservation;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.service.impl.BookReservationService;
 import org.thymeleaf.context.WebContext;
@@ -41,7 +42,8 @@ public class BookReservationServlet extends HttpServlet {
         WebContext webContext = new WebContext(webExchange);
 
         try{
-            bookReservationService.placeReservation(bookTitle, readerName, readerAddress, numberOfCopies);
+            BookReservation reservation = this.bookReservationService.placeReservation(bookTitle, readerName, readerAddress, numberOfCopies);
+            req.setAttribute("book", reservation);
             webContext.setVariable("bookTitle", bookTitle);
             webContext.setVariable("readerName", readerName);
             webContext.setVariable("readerAddress", readerAddress);
