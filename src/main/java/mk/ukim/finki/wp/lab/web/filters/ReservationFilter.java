@@ -12,7 +12,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
 
-@WebFilter
+@WebFilter(urlPatterns = "/ddsd")
 public class ReservationFilter implements Filter {
 
     @Override
@@ -21,13 +21,12 @@ public class ReservationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String method = req.getMethod();
         String path = req.getServletPath();
-        BookReservation reservation = (BookReservation) req.getAttribute("book");
 
-        if(!path.isEmpty() && method.equals("GET") && reservation == null){
+        if(!path.isEmpty() && method.equals("GET") && !path.equals("/favicon.ico")){
             resp.sendRedirect("/");
         }
         else{
-            filterChain.doFilter(servletRequest, servletResponse);
+             filterChain.doFilter(servletRequest, servletResponse);
         }
     }
 }

@@ -42,8 +42,7 @@ public class BookReservationServlet extends HttpServlet {
         WebContext webContext = new WebContext(webExchange);
 
         try{
-            BookReservation reservation = this.bookReservationService.placeReservation(bookTitle, readerName, readerAddress, numberOfCopies);
-            req.setAttribute("book", reservation);
+            this.bookReservationService.placeReservation(bookTitle, readerName, readerAddress, numberOfCopies);
             webContext.setVariable("bookTitle", bookTitle);
             webContext.setVariable("readerName", readerName);
             webContext.setVariable("readerAddress", readerAddress);

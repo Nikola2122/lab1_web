@@ -36,11 +36,19 @@
         .error {
             color: red;
         }
-        #wrap{
+
+        #wrap {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             align-items: center;
+        }
+        .item{
+            display: flex;
+            align-items: end;
+            border-bottom: 1px solid #4CAF50;
+            gap: 15px;
+            padding-bottom: 15px;
         }
     </style>
 </head>
@@ -49,12 +57,29 @@
     <h1>Welcome to our Book Reservation App</h1>
 </header>
 <main>
-    <form th:action="@{/bookReservation}" method="POST">
+    <div>
+        <div style="display: flex; justify-content: space-around" th:each="elem : ${books}">
+            <div class="item">
+                <div th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + ' Author name: ' + elem.getAuthor().getName() + ' Author Surname: ' + elem.getAuthor().getSurname()}"></div>
+                <form method="POST" th:action="@{'/books/delete/{id}'(id=${elem.getId()})}">
+                    <button type="submit">Delete</button>
+                </form>
+                <a style="text-decoration: none; background-color: #4CAF50;"
+                   th:href="@{/books/edit-form/{id} (id=${elem.getId()})}">
+                    Edit
+                </a>
+            </div>
+        </div>
+    </div>
+    <a th:href="@{/books/add-form}">Add a new book</a>
+
+
+    <form th:action="@{/controller/bookReservation/place}" method="POST">
         <h2>Choose a book:</h2>
         <ul>
             <li th:each="elem : ${books}">
                 <input class="book-option" th:value="${elem.getTitle()}" name="bookTitle"
-                       th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating()}"
+                       th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + 'Author name: ' + elem.getAuthor().getName() + 'Author Surname: ' + elem.getAuthor().getSurname()}"
                        type="radio">
             </li>
         </ul>
