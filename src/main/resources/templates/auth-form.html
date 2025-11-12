@@ -18,9 +18,10 @@
 <body>
 <div class="container">
     <div class="row">
-        <div th:if="${author != null}" class="col-md-5">
-            <form th:action="@{/authors/edit/{id} (id=${author.getId()})}" method="POST">
-                <div class="form-group">
+        <div class="col-md-5">
+            <form th:with="url=${author != null} ? '/authors/edit/' + ${author.id} : '/authors/add'"
+                  th:action="@{${url}}"
+                  method="post">                <div class="form-group">
                     <label for="name">Author name</label>
                     <input type="text"
                            class="form-control"
@@ -60,40 +61,6 @@
                 <a type="button" class="btn btn-primary" href="/authors">Back</a>
             </form>
         </div>
-    </div>
-    <div th:if="${author == null}" class="col-md-5">
-        <form th:action="@{/authors/add}" method="POST">
-            <div class="form-group">
-                <label for="name">Author name</label>
-                <input type="text"
-                       class="form-control"
-                       name="name"
-                       placeholder="name">
-            </div>
-            <div class="form-group">
-                <label for="surname">Author surname</label>
-                <input type="text"
-                       class="form-control"
-                       name="surname"
-                       placeholder="surname">
-            </div>
-            <div class="form-group">
-                <label for="country">Country</label>
-                <input type="text"
-                       class="form-control"
-                       name="country"
-                       placeholder="Country">
-            </div>
-            <div class="form-group">
-                <label for="bio">Bio</label>
-                <input type="text"
-                       class="form-control"
-                       name="bio"
-                       placeholder="bio">
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <a type="button" class="btn btn-primary" href="/authors">Back</a>
-        </form>
     </div>
 </div>
 
