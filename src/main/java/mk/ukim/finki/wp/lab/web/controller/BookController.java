@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.lab.web.controller;
 
+import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.service.AuthorService;
@@ -20,8 +21,15 @@ public class BookController {
     }
 
     @GetMapping
-    public String getBooksPage(@RequestParam(required = false) String error, Model model){
-        model.addAttribute("books", bookService.listAll());
+    public String getBooksPage(@RequestParam(required = false) String error,
+                               @RequestParam(required = false) Long authorId,
+                               Model model){
+        if(authorId != null){
+            model.addAttribute("books", bookService.searchBooks(authorId));
+        }else {
+            model.addAttribute("books", bookService.listAll());
+        }
+        model.addAttribute("authors", authorService.findAll());
         if(error!=null && !error.isEmpty()){
             model.addAttribute("error", error);
             model.addAttribute("hasError", true);
@@ -72,7 +80,6 @@ public class BookController {
             return "redirect:/books?error=Book not found";
         }
         model.addAttribute("book", bookService.getBook(id));
-        bookService.deleteBook(id);
         return "book-form";
     }
 }

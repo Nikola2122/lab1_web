@@ -3,6 +3,7 @@ package mk.ukim.finki.wp.lab.service.impl;
 import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.repository.AuthorRepository;
+import mk.ukim.finki.wp.lab.repository.jpa.AuthorRepositoryJpa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +13,10 @@ import java.util.Optional;
 @Service
 public class AuthorService implements mk.ukim.finki.wp.lab.service.AuthorService {
 
-    private final AuthorRepository authorRepository;
+    private final AuthorRepositoryJpa authorRepository;
 
     @Autowired
-    public AuthorService(AuthorRepository authorRepository) {
+    public AuthorService(AuthorRepositoryJpa authorRepository) {
         this.authorRepository = authorRepository;
     }
 
@@ -26,7 +27,7 @@ public class AuthorService implements mk.ukim.finki.wp.lab.service.AuthorService
 
     @Override
     public Author findById(Long id) {
-        return authorRepository.findById(id);
+        return authorRepository.findById(id).get();
     }
 
     @Override
@@ -40,12 +41,13 @@ public class AuthorService implements mk.ukim.finki.wp.lab.service.AuthorService
 
     @Override
     public void deleteAuth(Long id) {
-        authorRepository.delete(id);
+        Author a = authorRepository.findById(id).get();
+        authorRepository.delete(a);
     }
 
     @Override
     public Author editAuth(Long id, String name, String surname, String country, String bio) {
-        Author a = authorRepository.findById(id);
+        Author a = authorRepository.findById(id).get();
         a.setName(name);
         a.setSurname(surname);
         a.setCountry(country);

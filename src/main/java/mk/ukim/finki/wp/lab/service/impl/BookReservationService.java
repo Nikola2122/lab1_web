@@ -1,28 +1,33 @@
 package mk.ukim.finki.wp.lab.service.impl;
 
+import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.BookReservation;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.repository.BookReservationRepository;
 import mk.ukim.finki.wp.lab.repository.impl.InMemoryBookReservationRepo;
+import mk.ukim.finki.wp.lab.repository.jpa.BookReservRepoJpa;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class BookReservationService implements mk.ukim.finki.wp.lab.service.BookReservationService {
-    private final InMemoryBookReservationRepo bookReservationRepo;
+    private final BookReservRepoJpa bookReservationRepo;
+    private final BookService bookService;
 
-    BookReservationService(InMemoryBookReservationRepo bookReservationRepository) {
+    BookReservationService(BookReservRepoJpa bookReservationRepository, BookService bookService) {
         this.bookReservationRepo = bookReservationRepository;
+        this.bookService = bookService;
     }
 
     @Override
-    public BookReservation placeReservation(String bookTitle, String readerName, String readerAddress, int numberOfCopies) {
-        if(bookTitle == null || bookTitle.isEmpty() || readerName == null
+    public BookReservation placeReservation(Long bookId, String readerName, String readerAddress, int numberOfCopies) {
+        if(bookId == null || readerName == null
                 || readerName.isEmpty() || readerAddress == null || readerAddress.isEmpty()) {
             throw new BadArgumentsException("Bad arguments for reserving a book");
         }
         else{
-            BookReservation bookReservation = new BookReservation(bookTitle, readerName, readerAddress, numberOfCopies);
+            Book b = bookService.getBook(bookId);
+            BookReservation bookReservation = new BookReservation(b, readerName, readerAddress, numberOfCopies);
             return this.bookReservationRepo.save(bookReservation);
         }
     }

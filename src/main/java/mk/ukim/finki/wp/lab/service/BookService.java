@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface BookService {
     List<Book> listAll();
-    List<Book> searchBooks(String text, Double rating);
+    List<Book> searchBooks(Long id);
     Book saveBook(String title, String genre, Double rating, Long authorId);
     void deleteBook(Long id);
     Book getBook(Long id);

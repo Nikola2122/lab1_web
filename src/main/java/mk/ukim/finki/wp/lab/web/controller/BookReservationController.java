@@ -24,7 +24,7 @@ public class BookReservationController {
     }
 
     @PostMapping("/place")
-    String reserve(@RequestParam(required = false) String bookTitle,
+    String reserve(@RequestParam(required = false) Long bookId,
                    @RequestParam(required = false) String readerName,
                    @RequestParam(required = false) String readerAddress,
                    @RequestParam(required = false) String numCopies, Model model, HttpServletRequest request){
@@ -33,8 +33,8 @@ public class BookReservationController {
         String ip = request.getRemoteAddr();
 
         try{
-            this.bookReservationService.placeReservation(bookTitle, readerName, readerAddress, numberOfCopies);
-            model.addAttribute("bookTitle", bookTitle);
+            this.bookReservationService.placeReservation(bookId, readerName, readerAddress, numberOfCopies);
+            model.addAttribute("bookTitle", bookId);
             model.addAttribute("readerName", readerName);
             model.addAttribute("readerAddress", readerAddress);
             model.addAttribute("numberOfCopies", numberOfCopies);

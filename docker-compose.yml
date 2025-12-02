@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:17.4
+    restart: always
+    environment:
+      POSTGRES_USER: booksN
+      POSTGRES_PASSWORD: meli
+      POSTGRES_DB: books
+    volumes:
+      - pgdata2:/var/lib/postgresql/data
+    ports:
+      - "9999:5432"
+volumes:
+  pgdata2:

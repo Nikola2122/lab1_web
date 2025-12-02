@@ -43,21 +43,47 @@
             justify-content: space-around;
             align-items: center;
         }
-        .item{
+
+        .item {
             display: flex;
             align-items: end;
             border-bottom: 1px solid #4CAF50;
             gap: 15px;
             padding-bottom: 15px;
         }
+
+        #wrapper {
+            display: flex;
+            justify-content: space-around;
+        }
     </style>
 </head>
 <body>
 <header>
-    <h1>Welcome to our Book Reservation App</h1>
+    <h1>Welcome to our Book Reservation App <a th:href="@{/books}">books</a> <a th:href="@{/authors}">authors</a></h1>
 </header>
+
+<h3 class="error" th:if="${hasError != null}" th:text="${error}"></h3>
+
 <main>
     <div>
+        <form th:method="GET" th:action="@{/books}">
+            <div id="wrapper">
+                <div>
+                    SELECT THE NAME OF THE AUTHOR
+                </div>
+                <select name="authorId" class="form-control">
+                    <option th:each="auth : ${authors}"
+                            th:value="${auth.getId()}"
+                            th:text="${auth.getName()}">
+                    </option>
+                </select>
+                <button type="submit">SEARCH</button>
+            </div>
+        </form>
+    </div>
+    <div>
+
         <div style="display: flex; justify-content: space-around" th:each="elem : ${books}">
             <div class="item">
                 <div th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + ' Author name: ' + elem.getAuthor().getName() + ' Author Surname: ' + elem.getAuthor().getSurname()}"></div>
@@ -78,8 +104,8 @@
         <h2>Choose a book:</h2>
         <ul>
             <li th:each="elem : ${books}">
-                <input class="book-option" th:value="${elem.getTitle()}" name="bookTitle"
-                       th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + 'Author name: ' + elem.getAuthor().getName() + 'Author Surname: ' + elem.getAuthor().getSurname()}"
+                <input class="book-option" th:value="${elem.getId()}" name="bookId"
+                       th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + ''}"
                        type="radio">
             </li>
         </ul>
@@ -97,31 +123,31 @@
         <input type="submit" value="Reserve Book">
     </form>
 
-    <div>
-        <form th:method="POST" th:action="@{/}">
-            <div id="wrap">
-                <h2>Enter search information:</h2>
-                <label for="title">Book Title:</label>
-                <input id="title" type="text" name="titleS"><br/>
-                <label for="rating">Rating:</label>
-                <input id="rating" type="number" min="1" max="10" name="ratingS"><br/><br/>
+    <!--    <div>-->
+    <!--        <form th:method="POST" th:action="@{/}">-->
+    <!--            <div id="wrap">-->
+    <!--                <h2>Enter search information:</h2>-->
+    <!--                <label for="title">Book Title:</label>-->
+    <!--                <input id="title" type="text" name="titleS"><br/>-->
+    <!--                <label for="rating">Rating:</label>-->
+    <!--                <input id="rating" type="number" min="1" max="10" name="ratingS"><br/><br/>-->
 
-                <input type="submit" value="Search for books">
-            </div>
-        </form>
-        <h3 class="error" th:if="${hasError != null}" th:text="${error}">
+    <!--                <input type="submit" value="Search for books">-->
+    <!--            </div>-->
+    <!--        </form>-->
+    <!--        <h3 class="error" th:if="${hasError != null}" th:text="${error}">-->
 
-        </h3>
-        <ul th:if="${searchBooks != null}">
-            <li th:each="book : ${searchBooks}">
-                <p>
-                    <span th:text="${book.getTitle()}"></span> -
-                    <span th:text="${book.getGenre()}"></span> -
-                    <span th:text="${book.getAverageRating()}"></span>
-                </p>
-            </li>
-        </ul>
-    </div>
+    <!--        </h3>-->
+    <!--        <ul th:if="${searchBooks != null}">-->
+    <!--            <li th:each="book : ${searchBooks}">-->
+    <!--                <p>-->
+    <!--                    <span th:text="${book.getTitle()}"></span> - -->
+    <!--                    <span th:text="${book.getGenre()}"></span> - -->
+    <!--                    <span th:text="${book.getAverageRating()}"></span>-->
+    <!--                </p>-->
+    <!--            </li>-->
+    <!--        </ul>-->
+    <!--    </div>-->
 
 </main>
 </body>
