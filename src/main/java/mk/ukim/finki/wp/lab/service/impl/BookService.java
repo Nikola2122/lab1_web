@@ -48,7 +48,11 @@ public class BookService implements mk.ukim.finki.wp.lab.service.BookService {
             throw new BadArgumentsException("Bad arguments for editing a book");
         }
         Author a = authorService.findById(authorId);
-        Book b = new Book(title, genre, rating, id, a);
+        Book b = this.bookRepo.findById(id);
+        b.setAuthor(a);
+        b.setGenre(genre);
+        b.setTitle(title);
+        b.setAverageRating(rating);
         bookRepo.saveBook(b);
         return b;
     }
