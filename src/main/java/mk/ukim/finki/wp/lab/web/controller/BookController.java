@@ -5,6 +5,7 @@ import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.service.AuthorService;
 import mk.ukim.finki.wp.lab.service.BookService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,19 @@ public class BookController {
 
     @GetMapping
     public String getBooksPage(@RequestParam(required = false) String error,
+                               @RequestParam(required = false) String title,
+                               @RequestParam(required = false) Double rating,
                                @RequestParam(required = false) Long authorId,
+                               @RequestParam(defaultValue = "1") Integer pageNum,
+                               @RequestParam(defaultValue = "10") Integer pageSize,
                                Model model){
-        if(authorId != null){
-            model.addAttribute("books", bookService.searchBooks(authorId));
-        }else {
-            model.addAttribute("books", bookService.listAll());
-        }
+        Page<Book> products = bookService.find(title, rating, authorId, pageNum, pageSize);
+        model.addAttribute("page", products);
+        model.addAttribute("title", title);
+        model.addAttribute("rating", rating);
+        model.addAttribute("authorId", authorId);
+
+
         model.addAttribute("authors", authorService.findAll());
         if(error!=null && !error.isEmpty()){
             model.addAttribute("error", error);

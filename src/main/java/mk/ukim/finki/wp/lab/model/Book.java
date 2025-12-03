@@ -14,7 +14,7 @@ import java.util.Random;
 public class Book {
     String title;
     String genre;
-    double averageRating;
+    Double averageRating;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

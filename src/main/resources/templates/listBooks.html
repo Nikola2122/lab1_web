@@ -69,22 +69,33 @@
     <div>
         <form th:method="GET" th:action="@{/books}">
             <div id="wrapper">
-                <div>
-                    SELECT THE NAME OF THE AUTHOR
+                <div class="col-md-6 form-group">
+                    <label for="searchName" class="form-label">Search by Title</label>
+                    <input type="text" th:value="${title}" class="form-control" id="searchName"
+                           placeholder="Enter product name" name="title">
                 </div>
-                <select name="authorId" class="form-control">
-                    <option th:each="auth : ${authors}"
-                            th:value="${auth.getId()}"
-                            th:text="${auth.getName()}">
-                    </option>
-                </select>
+                <div class="col-md-6 form-group">
+                    <label for="rating" class="form-label">Search by Rating</label>
+                    <input type="number" th:value="${rating}" class="form-control" id="rating"
+                           placeholder="Enter product name" name="rating">
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="authorSelect" class="form-label">Author</label>
+                    <select name="authorId" id="authorSelect" class="form-control">
+                        <option value="">All Authors</option>
+                        <option th:each="auth : ${authors}"
+                                th:value="${auth.getId()}"
+                                th:text="${auth.getName()}"
+                                th:selected="${authorId != null && authorId == auth.getId()}">
+                        </option>
+                    </select>
+                </div>
                 <button type="submit">SEARCH</button>
             </div>
         </form>
     </div>
-    <div>
-
-        <div style="display: flex; justify-content: space-around" th:each="elem : ${books}">
+    <div th:if="${page.getTotalElements() > 0}">
+        <div style="display: flex; justify-content: space-around" th:each="elem : ${page.getContent()}">
             <div class="item">
                 <div th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + ' Author name: ' + elem.getAuthor().getName() + ' Author Surname: ' + elem.getAuthor().getSurname()}"></div>
                 <form method="POST" th:action="@{'/books/delete/{id}'(id=${elem.getId()})}">
@@ -96,6 +107,7 @@
                 </a>
             </div>
         </div>
+        <div th:include="fragments/paging :: pageSection(${page})"></div>
     </div>
     <a th:href="@{/books/add-form}">Add a new book</a>
 
@@ -103,7 +115,7 @@
     <form th:action="@{/controller/bookReservation/place}" method="POST">
         <h2>Choose a book:</h2>
         <ul>
-            <li th:each="elem : ${books}">
+            <li th:each="elem : ${page.getContent()}">
                 <input class="book-option" th:value="${elem.getId()}" name="bookId"
                        th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + ''}"
                        type="radio">

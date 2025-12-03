@@ -5,9 +5,15 @@ import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.repository.impl.InMemoryBookRepo;
 import mk.ukim.finki.wp.lab.repository.jpa.BookRepositoryJpa;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static mk.ukim.finki.wp.lab.service.FieldFilterSpecification.*;
 
 @Service
 public class BookService implements mk.ukim.finki.wp.lab.service.BookService {
@@ -17,6 +23,19 @@ public class BookService implements mk.ukim.finki.wp.lab.service.BookService {
     BookService(BookRepositoryJpa bookRepo, AuthorService authorService) {
         this.bookRepo = bookRepo;
         this.authorService = authorService;
+    }
+
+    @Override
+    public Page<Book> find(String title, Double rating, Long authorId, Integer pageNum, Integer pageSize) {
+        Specification<Book> specification = Specification.allOf(
+                filterContainsText(Book.class, "title", title),
+                filterEqualsV(Book.class, "averageRating", rating),
+                filterEquals(Book.class, "author.id", authorId)
+        );
+
+        return this.bookRepo.findAll(
+                specification,
+                PageRequest.of(pageNum - 1, pageSize, Sort.by(Sort.Direction.DESC, "title")));
     }
 
     @Override
