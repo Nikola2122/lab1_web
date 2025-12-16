@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.service.AuthorService;
 import mk.ukim.finki.wp.lab.service.BookService;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,10 @@ public class BookController {
         this.authorService = authorService;
     }
 
+    @GetMapping("/access_denied")
+    public String getAccessDeniedPage(Model model) {
+        return "access-denied";
+    }
     @GetMapping
     public String getBooksPage(@RequestParam(required = false) String error,
                                @RequestParam(required = false) String title,
@@ -44,6 +49,7 @@ public class BookController {
         return "listBooks";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     public String saveBook(@RequestParam String title,
                            @RequestParam String genre,
@@ -53,6 +59,7 @@ public class BookController {
         return "redirect:/books";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/edit/{id}")
     public String saveBook(@PathVariable Long id,
                            @RequestParam(required = false) String title,
@@ -68,17 +75,21 @@ public class BookController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/add-form")
     public String getAddForm(Model model){
         model.addAttribute("authors", authorService.findAll());
         return "book-form";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id){
         bookService.deleteBook(id);
         return "redirect:/books";
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/edit-form/{id}")
     public String editBook(@PathVariable Long id, Model model){
         model.addAttribute("authors", authorService.findAll());

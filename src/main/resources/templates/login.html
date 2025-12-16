@@ -1,0 +1,20 @@
+<div class="container" xmlns:th="http://www.thymeleaf.org">
+    <form class="form-signin mt-xl-5" method="post" action="/login">
+        <h2 class="form-signin-heading">Sign in</h2>
+        <p>
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" name="username" class="form-control" placeholder="Username"
+                   autofocus="">
+        </p>
+        <p>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+            >
+        </p>
+
+        <div th:if="${param.error}" th:text="${param.error}" class="text-danger"></div>
+
+        <button id="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a href="/register" class="btn btn-block btn-light">Don't have an account? Register here!</a>
+    </form>
+</div>

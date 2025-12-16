@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.exceptions.BadArgumentsException;
 import mk.ukim.finki.wp.lab.service.AuthorService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class AuthorController {
         return "listAuthors";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/add")
     String add(@RequestParam(required = false) String name,
                @RequestParam(required = false) String surname,
@@ -42,6 +44,7 @@ public class AuthorController {
         return "redirect:/authors";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/edit/{id}")
     public String saveBook(@PathVariable Long id,
                            @RequestParam(required = false) String name,
@@ -52,12 +55,14 @@ public class AuthorController {
         return "redirect:/authors";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{id}")
     public String deleteBook(@PathVariable Long id){
         authorService.deleteAuth(id);
         return "redirect:/authors";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/edit-form/{id}")
     public String editAuthor(@PathVariable Long id, Model model){
         Author a = authorService.findById(id);
@@ -68,6 +73,7 @@ public class AuthorController {
         return "auth-form";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/add-form")
     public String addAuthor(){
         return "auth-form";

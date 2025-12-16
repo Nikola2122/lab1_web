@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <title>Book Reservation - Welcome and choose a Book</title>
@@ -60,7 +61,17 @@
 </head>
 <body>
 <header>
-    <h1>Welcome to our Book Reservation App <a th:href="@{/books}">books</a> <a th:href="@{/authors}">authors</a></h1>
+    <h1>
+        Welcome to our Book Reservation App
+        <a th:href="@{/books}">books</a>
+        <a th:href="@{/authors}">authors</a>
+        <th:block sec:authorize="isAnonymous()">
+            <a th:href="@{/login}">LOGIN</a>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}">LOGOUT</a>
+        </th:block>
+    </h1>
 </header>
 
 <h3 class="error" th:if="${hasError != null}" th:text="${error}"></h3>
@@ -72,12 +83,12 @@
                 <div class="col-md-6 form-group">
                     <label for="searchName" class="form-label">Search by Title</label>
                     <input type="text" th:value="${title}" class="form-control" id="searchName"
-                           placeholder="Enter product name" name="title">
+                           placeholder="Enter book title" name="title">
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="rating" class="form-label">Search by Rating</label>
                     <input type="number" th:value="${rating}" class="form-control" id="rating"
-                           placeholder="Enter product name" name="rating">
+                           placeholder="Enter book rating" name="rating">
                 </div>
                 <div class="col-md-3 form-group">
                     <label for="authorSelect" class="form-label">Author</label>
@@ -98,18 +109,24 @@
         <div style="display: flex; justify-content: space-around" th:each="elem : ${page.getContent()}">
             <div class="item">
                 <div th:text="${'Title: ' + elem.getTitle() + ', Genre: ' + elem.getGenre() + ', Rating: ' + elem.getAverageRating() + ' Author name: ' + elem.getAuthor().getName() + ' Author Surname: ' + elem.getAuthor().getSurname()}"></div>
-                <form method="POST" th:action="@{'/books/delete/{id}'(id=${elem.getId()})}">
-                    <button type="submit">Delete</button>
-                </form>
-                <a style="text-decoration: none; background-color: #4CAF50;"
-                   th:href="@{/books/edit-form/{id} (id=${elem.getId()})}">
-                    Edit
-                </a>
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <form method="POST" th:action="@{'/books/delete/{id}'(id=${elem.getId()})}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </th:block>
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <a style="text-decoration: none; background-color: #4CAF50;"
+                       th:href="@{/books/edit-form/{id} (id=${elem.getId()})}">
+                        Edit
+                    </a>
+                </th:block>
             </div>
         </div>
         <div th:include="fragments/paging :: pageSection(${page})"></div>
     </div>
-    <a th:href="@{/books/add-form}">Add a new book</a>
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/books/add-form}">Add a new book</a>
+    </th:block>
 
 
     <form th:action="@{/controller/bookReservation/place}" method="POST">

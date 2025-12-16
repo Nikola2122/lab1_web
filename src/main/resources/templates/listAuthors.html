@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <title>Book Reservation - Welcome and choose a Book</title>
@@ -43,7 +44,8 @@
             justify-content: space-around;
             align-items: center;
         }
-        .item{
+
+        .item {
             display: flex;
             align-items: end;
             border-bottom: 1px solid #4CAF50;
@@ -61,18 +63,25 @@
         <div style="display: flex; justify-content: space-around" th:each="elem : ${authors}">
             <div class="item">
                 <div th:text="${elem.getName() + ' ' + elem.getSurname() + ' ' + elem.getCountry() + ' ' + elem.getBiography()}"></div>
-                <form method="POST" th:action="@{'/authors/delete/{id}'(id=${elem.getId()})}">
-                    <button type="submit">Delete</button>
-                </form>
-                <a style="text-decoration: none; background-color: #4CAF50;"
-                   th:href="@{/authors/edit-form/{id} (id=${elem.getId()})}">
-                    Edit
-                </a>
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <form method="POST" th:action="@{'/authors/delete/{id}'(id=${elem.getId()})}">
+                        <button type="submit">Delete</button>
+                    </form>
+                </th:block>
+                <th:block sec:authorize="hasRole('ADMIN')">
+                    <a style="text-decoration: none; background-color: #4CAF50;"
+                       th:href="@{/authors/edit-form/{id} (id=${elem.getId()})}">
+                        Edit
+                    </a>
+                </th:block>
             </div>
         </div>
     </div>
-    <a th:href="@{/authors/add-form}">Add a new author</a>
+    <th:block sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/authors/add-form}">Add a new author</a>
+    </th:block>
     <h1 style="color: red" th:if="${hasError}" th:text="${error}"></h1>
 </main>
 </body>
 </html>
+
