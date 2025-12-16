@@ -56,7 +56,17 @@
 </head>
 <body>
 <header>
-    <h1>Welcome to our Book Reservation App <a th:href="@{/books}">books</a> <a th:href="@{/authors}">authors</a></h1>
+    <h1>
+        Welcome to our Book Reservation App
+        <a th:href="@{/books}">books</a>
+        <a th:href="@{/authors}">authors</a>
+        <th:block sec:authorize="isAnonymous()">
+            <a th:href="@{/login}">LOGIN</a>
+        </th:block>
+        <th:block sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}">LOGOUT</a>
+        </th:block>
+    </h1>
 </header>
 <main>
     <div>
